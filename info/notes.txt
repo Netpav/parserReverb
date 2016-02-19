@@ -1,0 +1,9 @@
+
+# sentence = "Bananas are an excellent source of potassium. Kiwis are a bad source of chocolate."
+#
+# path_to_reverb = 'C:\Users\Jontes\Downloads'
+#
+# lines = run_command('java -jar reverb-latest.jar -q', sentence)
+#
+#
+# print lines[1]

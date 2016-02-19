@@ -1,59 +1,35 @@
-import subprocess
-from nltk.tokenize import sent_tokenize
+import os
 
-## FUNCTIONS DEFINITON
+from src.ReverbParser import ReverbParser
 
-# Function for running commands
-def run_command(command, in_string):
-    # Open process
-    p = subprocess.Popen(command,
-                         stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT)
-    # Write to process stdin and get its stdout.
-    return p.communicate(input=in_string)[0].strip()
+# Get directory of the file.
+current_dir = os.path.dirname(os.path.realpath(__file__))
 
-# Process one document
-def process_document(doc_text):
-    # Split document to sentences.
-    sentences = sent_tokenize(doc_text)
-    # Run every sentence through Reverb.
-    sent_data = []
-    for sentence in sentences:
-        r_output = run_command('java -jar libs/reverb-latest.jar -q', sentence)
-        if not r_output:
-            continue
-        r_items = r_output.split('\t')
-        original_sentence = r_items[12].strip()
-        triple = ' '.join(r_items[2:5]).strip()
-        triple_normalized = ' '.join(r_items[15:18]).strip()
-        sent_data.append([original_sentence, triple, triple_normalized])
-    # Result
-    return sent_data
+# Set filepaths
+reverb_filepath = os.path.abspath(current_dir+'/libs/reverb-latest.jar')
+output_dir = current_dir
 
-## PERFORMANCE PART
+# Create the main object.
+reverb_parser = ReverbParser(reverb_filepath)
 
-# Read reviews file line by line.
-input_file = open('reviews_10.txt')
-output_file = open('output.txt', 'w')
+# # Select and parse input file
+# input_filepath = os.path.abspath('reviews_10.txt')
+# reverb_parser.process_file(input_filepath, output_dir)
+# exit()
 
-for input_line in input_file:
-    # Read a document
-    items = input_line.split('\t')
-    doc_class = items[0].strip()
-    doc_text = items[1].strip()
-    # Get document features
-    doc_data = process_document(doc_text)
-    if not doc_data:
-        continue    # skip empty lists
-    data_line = []
-    # Join features to one line
-    for (orig, triple_std, triple_norm) in doc_data:
-        data_line.extend([orig, triple_std])
-    # Create string from features
-    str_line = ' | '.join(data_line)
-    # Add class
-    str_line = doc_class + '\t' + str_line
-    print str_line
-    # Write to file
-    output_file.write(str_line + '\n')
+# If the file was run directly (as script).
+if __name__ == '__main__':
+    # Module required for command line parsing.
+    import argparse
+
+    # Parse the incoming arguments: ./run_reverb.py <input filepath> <output directory>
+    args_parser = argparse.ArgumentParser(description='Reverb caller and parser in Python')
+    args_parser.add_argument('infile', action='store', help='Path to the input file.',
+                        metavar='<string>', nargs=1)
+    args_parser.add_argument('outdir', action='store', help='Path to the output directory.',
+                        metavar='<string>', nargs=1)
+    args = args_parser.parse_args()
+
+    # Process arguments - if it's relative path.
+    reverb_parser.process_file(args.infile[0], args.outdir[0])
+

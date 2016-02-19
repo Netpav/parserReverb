@@ -6,18 +6,22 @@ from nltk.tokenize import sent_tokenize
 
 
 class ReverbParser(object):
+    """
+    Read document file, split every document into sentences, run every sentence through reverb, join the results.
+    Finally write the result to documents file (with class).
+    """
 
     def __init__(self, reverb_filepath):
         """
-        Constructor.
         :param reverb_filepath: Absolute path to Reverb JAR file.
         """
         # Define reverb command
-        self.reverb_command = 'java -Xmx512m -jar ' + reverb_filepath + ' -q'
+        self.reverb_command = 'java -Xmx1g -jar ' + reverb_filepath + ' -q'
 
     def process_document(self, doc_text):
         """
         Process input document and return list of document features.
+
         :param doc_text: input text (may contain multiple sentences).
         :return: list of documents features.
         """
@@ -40,6 +44,7 @@ class ReverbParser(object):
     def process_file(self, input_filepath, output_dir):
         """
         Read input file, process every line in Reverb and write result to output file.
+
         :param input_filepath: Path to the input file.
         :param output_dir: Path to the output directory.
         :return: nothing
@@ -85,6 +90,7 @@ class ReverbParser(object):
     def run_command(command, in_string):
         """
         Function for running commands in command line.
+
         :param command:
         :param in_string: input
         :return: output

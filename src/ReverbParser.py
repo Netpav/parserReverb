@@ -63,7 +63,12 @@ class ReverbParser(object):
         # Read input file line by line.
         for input_line in input_file:
             # Read a document.
-            items = input_line.split('\t')
+            items = input_line.strip().split('\t')
+            # If there is no tabular or line is blank, skip the line.
+            if len(items) == 1:
+                print('<>Skipped badly formated line.')
+                continue
+            # Get class and text.
             doc_class = items[0].strip()
             doc_text = items[1].strip()
             # Get document features.
@@ -96,7 +101,7 @@ class ReverbParser(object):
         :return: output
         """
         # Open process
-        p = subprocess.Popen(command,
+        p = subprocess.Popen(command, shell=True,
                              stdin=subprocess.PIPE,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.STDOUT)

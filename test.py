@@ -11,6 +11,13 @@ regexp = re.compile('([12])')
 #matches = regexp.match(text)
 #matches = regexp.findall(text)
 
-matches = regexp.split(text2)
+#matches = regexp.split(text2)
 
-print matches
+text0 = "2\tdocument"
+text1 = "1 document"
+text2 = " \t "
+text3 = ""
+
+mlist = text2.strip().split('\t')
+
+print len(mlist)

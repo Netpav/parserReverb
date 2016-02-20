@@ -1,7 +1,13 @@
 import os
 import sys
 
-from src.ReverbParser import ReverbParser
+# Import classes
+try:
+    from src.ReverbParser import ReverbParser
+    is_nltk = True
+except ImportError, e:
+    is_nltk = False
+
 from src.ReverbBulkParser import ReverbBulkParser
 
 # Get directory of the file.
@@ -11,7 +17,8 @@ current_dir = os.path.dirname(os.path.realpath(__file__))
 reverb_filepath = os.path.abspath(current_dir+'/libs/reverb-latest.jar')
 output_dir = current_dir + '/output'
 
-# Create the main object.
+## TESTING
+#  Create the main object.
 #reverb_parser = ReverbParser(reverb_filepath)
 #reverb_parser = ReverbBulkParser()
 
@@ -43,11 +50,15 @@ if __name__ == '__main__':
 
     # Create the correct object
     if op_mode == 1:
+        if not is_nltk:
+            exit('Module nltk is not installed, you cannot use mode 1.')
         reverb_parser = ReverbParser(reverb_filepath)
     elif op_mode == 2:
         reverb_parser = ReverbBulkParser(True)
     elif op_mode == 3:
         reverb_parser = ReverbBulkParser(False)
+    else:
+        exit('Unknown mode entered.')
 
     # Process file
     reverb_parser.process_file(in_file, out_dir)

@@ -6,11 +6,13 @@ import re
 class ReverbBulkParser(object):
     """Parse Reverb output file and write documents (with class) with added reverb output to file."""
 
-    def __init__(self, remove_duplicates=True):
+    def __init__(self, remove_duplicates=True, verbose_output=False):
         """
         :param remove_duplicates (boolean): If triples with same original text should be joined to one document.
+        :param verbose (boolean): If final documents should be written to console.
         """
         self.remove_duplicates = remove_duplicates
+        self.verbose_output = verbose_output
 
     def process_file(self, input_filepath, output_dir):
         """
@@ -106,7 +108,8 @@ class ReverbBulkParser(object):
         text_line = ' | '.join(document[1:])
         total_line = document[0] + '\t' + text_line
         # Perform write
-        print(total_line)
+        if self.verbose_output:
+            print(total_line)
         output_file.write(total_line + '\n')
 
     def _check_document_content(self, doc_text, previous_doc, triple):
@@ -121,4 +124,3 @@ class ReverbBulkParser(object):
             return False
         # Result
         return previous_doc
-

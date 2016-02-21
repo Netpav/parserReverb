@@ -25,7 +25,7 @@ class ReverbOnlyPhrasesNormalized(object):
         # Prepare files
         input_file = open(input_filepath)
         input_filename = os.path.basename(input_filepath).split('.')[0]
-        output_filename = input_filename + '_phrasesNormalized.txt'
+        output_filename = input_filename + '_phrasesNormalized.txt' # postfix _phrasesNormalized.txt
         output_filepath = os.path.abspath(output_dir + '/' + output_filename)
         output_file = open(output_filepath, 'w')
         # Print information
@@ -41,6 +41,7 @@ class ReverbOnlyPhrasesNormalized(object):
             # Get items
             r_items = r_line.split('\t')
             orig_text = r_items[12].strip()
+            # test if sentence start digit then add class
             if r_items[12][0].isdigit():
                 orig_class=r_items[12][0].strip()
             else:
@@ -48,8 +49,8 @@ class ReverbOnlyPhrasesNormalized(object):
             triple = ' '.join(r_items[2:5]).strip()
             triple_normalized = ' '.join(r_items[15:18]).strip()
             # Determined if the triple belongs to current or new document.
-            was_new_doc, n_doc, documents = self._process_reverb_text(orig_class,n_doc, documents, triple_normalized)
-            documents[n_doc].append(triple_normalized)
+            was_new_doc, n_doc, documents = self._process_reverb_text(orig_class,n_doc, documents, triple_normalized) # add triple_normalized
+            documents[n_doc].append(triple_normalized) #append triple_normalized
             # If a new document was created, write the previous one to the file.
             if r_l_n > 1 and was_new_doc:   # skip first line
                 self._write_document_to_file(output_file, documents[n_doc - 1])

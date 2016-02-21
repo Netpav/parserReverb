@@ -61,9 +61,10 @@ if __name__ == '__main__':
     elif op_mode == 3:
         reverb_parser = ReverbBulkParser(False)
     elif op_mode == 4:
-        reverb_parser = ReverbOnlyPhrases(True)
+        reverb_parser = ReverbOnlyPhrases(True,False)
     elif op_mode == 5:
         reverb_parser = ReverbOnlyPhrasesNormalized(True)
+        #TODO: reverb_parser = ReverbOnlyPhrases(True,True)
     else:
         exit('Unknown mode entered.')
 

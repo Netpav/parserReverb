@@ -6,12 +6,13 @@ import re
 class ReverbOnlyPhrases(object):
     """Parse Reverb output file and write phrases (with class) with added reverb output to file."""
 
-    def __init__(self, remove_duplicates=True, verbose_output=False):
+    def __init__(self, remove_duplicates=True, normalized=True, verbose_output=False):
         """
         :param remove_duplicates (boolean): If triples with same original text should be joined to one document.
         :param verbose (boolean): If final documents should be written to console.
         """
         self.remove_duplicates = remove_duplicates
+        self.normalized= normalized
         self.verbose_output = verbose_output
 
     def process_file(self, input_filepath, output_dir):
@@ -25,7 +26,7 @@ class ReverbOnlyPhrases(object):
         # Prepare files
         input_file = open(input_filepath)
         input_filename = os.path.basename(input_filepath).split('.')[0]
-        output_filename = input_filename + '_phrases.txt'
+        output_filename = input_filename + '_phrases.txt' # postfix _phrases.txt
         output_filepath = os.path.abspath(output_dir + '/' + output_filename)
         output_file = open(output_filepath, 'w')
         # Print information
@@ -41,15 +42,26 @@ class ReverbOnlyPhrases(object):
             # Get items
             r_items = r_line.split('\t')
             orig_text = r_items[12].strip()
+            # test if sentence start digit then add class
             if r_items[12][0].isdigit():
                 orig_class=r_items[12][0].strip()
             else:
                 orig_class=""
             triple = ' '.join(r_items[2:5]).strip()
             triple_normalized = ' '.join(r_items[15:18]).strip()
-            # Determined if the triple belongs to current or new document.
             was_new_doc, n_doc, documents = self._process_reverb_text(orig_class,n_doc, documents, triple)
             documents[n_doc].append(triple)
+
+            # TODO --- if self.normalized():TypeError: 'bool' object is not callable
+            # if self.normalized():
+            #      # Determined if the triple belongs to current or new document.
+            #     was_new_doc, n_doc, documents = self._process_reverb_text(orig_class,n_doc, documents, triple_normalized)
+            #     documents[n_doc].append(triple_normalized)
+            # else:
+            #      # Determined if the triple belongs to current or new document.
+            #     was_new_doc, n_doc, documents = self._process_reverb_text(orig_class,n_doc, documents, triple)
+            #     documents[n_doc].append(triple)
+
             # If a new document was created, write the previous one to the file.
             if r_l_n > 1 and was_new_doc:   # skip first line
                 self._write_document_to_file(output_file, documents[n_doc - 1])

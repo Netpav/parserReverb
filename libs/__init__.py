@@ -1,1 +1,1 @@
-__author__ = 'Jontes'
+__author__ = 'Jontes and Netopa'

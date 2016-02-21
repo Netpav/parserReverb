@@ -2,6 +2,9 @@ import os
 import sys
 
 # Import classes
+from src.ReverbOnlyPhrases import ReverbOnlyPhrases
+from src.ReverbOnlyPhrasesNormalized import ReverbOnlyPhrasesNormalized
+
 try:
     from src.ReverbParser import ReverbParser
     is_nltk = True
@@ -57,6 +60,10 @@ if __name__ == '__main__':
         reverb_parser = ReverbBulkParser(True)
     elif op_mode == 3:
         reverb_parser = ReverbBulkParser(False)
+    elif op_mode == 4:
+        reverb_parser = ReverbOnlyPhrases(True)
+    elif op_mode == 5:
+        reverb_parser = ReverbOnlyPhrasesNormalized(True)
     else:
         exit('Unknown mode entered.')
 

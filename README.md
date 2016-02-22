@@ -8,8 +8,12 @@ Dependencies: For mode 1 is [nltk](https://pypi.python.org/pypi/nltk) module nee
 
 ### Modes
 * `1` ... Reverb processes individual sentences of the document. Input file is text file with documents (format: `<class>\t<text>`)
-* `2` ... Reverb processes the whole text file with documents. Input file is pre-generated output from Reverb. This mode is much faster than mode 1.
-* `3` ... Same as 2, but does not remove duplicates.
+* `2` ... Reverb processes the whole text file with documents. Input file is pre-generated output from Reverb.(text + phrases) This mode is much faster than mode 1.
+* `3` ... Reverb processes the whole text file with documents. Input file is pre-generated output from Reverb.(text + normalized phrases)
+* `4` ... Input file is pre-generated "phrases" from Reverb.
+* `5` ... Input file is pre-generated "normalized phrases" from Reverb.
+* `6` ... Same as 2, but does not remove duplicates.
+
 
 ### Examples
 `python run_reverb.py 1 input/reviews_10.txt output` ... Process individual sentences from file "input/reviews_10.txt" and save result to subdirectory "output".
@@ -25,3 +29,5 @@ Well, that's quite impractical.
 
 ### Problem of mode 2
 God knows if it works properly, but it seems so :). I have no moral to write tests for this stuff.
+
+

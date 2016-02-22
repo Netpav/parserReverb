@@ -6,12 +6,13 @@ import re
 class ReverbBulkParser(object):
     """Parse Reverb output file and write documents (with class) with added reverb output to file."""
 
-    def __init__(self, remove_duplicates=True, verbose_output=False):
+    def __init__(self, remove_duplicates=True, included_phrases='text_triple_std', verbose_output=False):
         """
         :param remove_duplicates (boolean): If triples with same original text should be joined to one document.
         :param verbose (boolean): If final documents should be written to console.
         """
         self.remove_duplicates = remove_duplicates
+        self.included_phrases = included_phrases
         self.verbose_output = verbose_output
 
     def process_file(self, input_filepath, output_dir):
@@ -25,7 +26,7 @@ class ReverbBulkParser(object):
         # Prepare files
         input_file = open(input_filepath)
         input_filename = os.path.basename(input_filepath).split('.')[0]
-        output_filename = input_filename + '_processed.txt'
+        output_filename = input_filename + '_' + self.included_phrases + '.txt'
         output_filepath = os.path.abspath(output_dir + '/' + output_filename)
         output_file = open(output_filepath, 'w')
         # Print information
@@ -41,11 +42,16 @@ class ReverbBulkParser(object):
             # Get items
             r_items = r_line.split('\t')
             orig_text = r_items[12].strip()
-            triple = ' '.join(r_items[2:5]).strip()
+            triple_std = ' '.join(r_items[2:5]).strip()
             triple_normalized = ' '.join(r_items[15:18]).strip()
+            # Choose the right triple
+            if self.included_phrases in ['text_triple_std', 'triple_std']:
+                used_triple = triple_std
+            elif self.included_phrases in ['text_triple_norm', 'triple_norm']:
+                used_triple = triple_normalized
             # Determined if the triple belongs to current or new document.
-            was_new_doc, n_doc, documents = self._process_reverb_text(orig_text, n_doc, documents, triple)
-            documents[n_doc].append(triple)
+            was_new_doc, n_doc, documents = self._process_reverb_text(orig_text, n_doc, documents, used_triple)
+            documents[n_doc].append(used_triple)
             # If a new document was created, write the previous one to the file.
             if r_l_n > 1 and was_new_doc:   # skip first line
                 self._write_document_to_file(output_file, documents[n_doc - 1])
@@ -104,8 +110,12 @@ class ReverbBulkParser(object):
         return was_new_doc, n_doc, documents
 
     def _write_document_to_file(self, output_file, document):
-        # Prepare string
-        text_line = ' | '.join(document[1:])
+        # Write also text?
+        if self.included_phrases in ['text_triple_std', 'text_triple_norm']:
+            text_line = ' | '.join(document[1:])
+        else:
+            text_line = ' | '.join(document[2:])
+        # Prepare line string
         total_line = document[0] + '\t' + text_line
         # Perform write
         if self.verbose_output:

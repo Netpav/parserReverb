@@ -2,6 +2,9 @@ import os
 import sys
 
 # Import classes
+from src.ReverbOnlyPhrases import ReverbOnlyPhrases
+from src.ReverbOnlyPhrasesNormalized import ReverbOnlyPhrasesNormalized
+
 try:
     from src.ReverbParser import ReverbParser
     is_nltk = True
@@ -54,9 +57,15 @@ if __name__ == '__main__':
             exit('Module nltk is not installed, you cannot use mode 1.')
         reverb_parser = ReverbParser(reverb_filepath)
     elif op_mode == 2:
-        reverb_parser = ReverbBulkParser(True)
+        reverb_parser = ReverbBulkParser(True, 'text_triple_std')
     elif op_mode == 3:
-        reverb_parser = ReverbBulkParser(False)
+        reverb_parser = ReverbBulkParser(True, 'text_triple_norm')
+    elif op_mode == 4:
+        reverb_parser = ReverbBulkParser(True,'triple_std')
+    elif op_mode == 5:
+        reverb_parser = ReverbBulkParser(True,'triple_norm')
+    elif op_mode == 6:
+        reverb_parser = ReverbBulkParser(False, 'text_triple_std')
     else:
         exit('Unknown mode entered.')
 

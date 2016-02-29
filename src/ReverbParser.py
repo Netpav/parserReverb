@@ -1,6 +1,7 @@
 import subprocess
 import os
 import time
+import io # The io module is now recommended instead of codecs and is compatible with Python 3's open syntax, simular module codecs
 
 from nltk.tokenize import sent_tokenize
 
@@ -50,11 +51,12 @@ class ReverbParser(object):
         :return: nothing
         """
         # Prepare files
-        input_file = open(input_filepath)
+        input_file = io.open(input_filepath,'r',encoding='utf8')
         input_filename = os.path.basename(input_filepath).split('.')[0]
         output_filename = input_filename + '_reverb.txt'
         output_filepath = os.path.abspath(output_dir + '/' + output_filename)
-        output_file = open(output_filepath, 'w')
+        # write to utf-8 file
+        output_file = io.open(output_filepath,'w',encoding='utf8')
         # Print information
         print('>>>>NEW FILE')
         print('- Reading from file: %s') % input_filepath

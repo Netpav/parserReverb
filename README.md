@@ -25,9 +25,6 @@ Processing 10 documents takes about 90 seconds, that means 90/10 = 9 seconds per
 
 Processing 50 000 documents would take 50 000 * 9 = 450 000 seconds = 125 hours = 5.2 days
 
-Well, that's quite impractical.
 
-### Problem of mode 2
-God knows if it works properly, but it seems so :). I have no moral to write tests for this stuff.
 
 

@@ -1,5 +1,5 @@
 # Reverb parser
-Script for parsing reverb output into correct documents list.
+Script for parsing reverb output into correct documents list. More about this can be seen on https://github.com/knowitall/reverb
 
 ## Usage
 `python run_reverb.py <mode> <input file> <output dir>`
